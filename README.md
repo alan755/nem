@@ -1,2 +1,2 @@
 # nem
-Tool to automate node, express and mongodb, to create a CRUD app.
+Tool to automate structuring of  node, express and mongodb, to create a CRUD app.
