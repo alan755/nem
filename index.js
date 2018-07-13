@@ -4,6 +4,7 @@
 
 const program = require('commander')
 const inquirer = require('inquirer')
+const fs = require('fs')
 
 const exec = require('child_process').exec
 
@@ -34,19 +35,54 @@ let listfunction = () => {
     name: 'license',
     type: 'input',
     message: 'Can you please specify the license :'
+  }, {
+    name: 'dependencies',
+    type: 'checkbox',
+    message: 'Which all dependencies do you need : ',
+    choices: [{
+      name: 'express',
+      checked: true
+    }, {
+     name: 'body-parser'
+    }, { 
+      name: 'cors'
+    }, { 
+      name: 'mongoose'
+    }, {
+      name: 'ejs'
+    }, {
+      name: 'express-session'
+    }, {
+      name: 'cokkies'
+    }]
+  }, {    
+    name: 'devdependencies',
+    type: 'checkbox',
+    message: 'Specify the dev dependencies',
+    choices: [{
+      name: 'nodemon'
+    }] 
+  }, {
+    name: 'confirmation',
+    type: 'confirm',
+    message: 'Do you wish to continue'
   }]).then((answers) => {
-    console.log(answers.author)
-    /*
-        const cmd
-        let errfun = (error, stdout, stderr) => {
-          if (error) console.log('exec error: ' + error)
-          if (stdout) console.log(stdout)
-          if (stderr) console.log('shell error: ' + stderr)
-        }
-        exec(cmd, errfun)*/
+    
 
+
+    fs.writeFile('package.json', '{\n  "name": "' + answers.name + '",\n  "version": "' + answers.version + '",\n  "description": "' + answers.description + '",\n  "main":"index.js",\n  "scripts": {\n    "test":""\n  },\n  "repository": {\n    "type": "",\n    "url": ""\n  },\n  "keywords": {\n  },\n  "author": "' + answers.author + '",\n  "license": "' + answers.license + '",\n  "bugs": {\n    "url": ""\n  },\n  "homepage": "",\n  "dependencies": {\n    "' + answers.dependencies[0] + '": "",\n    "' + answers.dependencies[1] + '": ""\n  }\n}', function (err) {
+      if (err) throw err;
+        console.log('Done!');
+      }) 
+  
+    /*const cmd = ''
+    let errfun = (error, stdout, stderr) => {
+      if (error) console.log('exec error: ' + error)
+      if (stdout) console.log(stdout)
+      if (stderr) console.log('shell error: ' + stderr)
+    }
+    exec(cmd, errfun)*/
   })
-
 
 
 
