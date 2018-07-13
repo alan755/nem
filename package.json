@@ -1,0 +1,32 @@
+{
+  "name": "nem",
+  "version": "1.0.0",
+  "description": "Tool to automate structuring of node, express and mongodb.",
+  "main": "index.js",
+  "bin": "./index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BoringTech/nem.git"
+  },
+  "keywords": [
+    "cli",
+    "node",
+    "express",
+    "mongodb",
+    "commander",
+    "inquirer"
+  ],
+  "author": "Alan Mathew",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BoringTech/nem/issues"
+  },
+  "homepage": "https://github.com/BoringTech/nem#readme",
+  "dependencies": {
+    "commander": "^2.16.0",
+    "inquirer": "^6.0.0"
+  }
+}
