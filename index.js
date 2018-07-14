@@ -6,15 +6,12 @@ const program = require('commander')
 const inquirer = require('inquirer')
 const fs = require('fs')
 
-const exec = require('child_process').exec
-
-
-
-
+const exec = require('child_process').exec // to execute commands
 
 let listfunction = () => {
 
-  console.log('Welcome to nem!')
+  // questions
+  console.log('\n---------------{ nem }---------------\n')
   inquirer.prompt([{
     name: 'name',
     type: 'input',
@@ -43,11 +40,14 @@ let listfunction = () => {
       name: 'express',
       checked: true
     }, {
-      name: 'body-parser'
+      name: 'body-parser',
+      checked: true
     }, {
-      name: 'cors'
+      name: 'cors',
+      checked: true
     }, {
-      name: 'mongoose'
+      name: 'mongoose',
+      checked: true
     }, {
       name: 'ejs'
     }, {
@@ -69,29 +69,55 @@ let listfunction = () => {
   }]).then((answers) => {
 
 
-
+    // package.json creation
     fs.writeFile('package.json', '{\n  "name": "' + answers.name + '",\n  "version": "' + answers.version + '",\n  "description": "' + answers.description + '",\n  "main":"index.js",\n  "scripts": {\n    "test":""\n  },\n  "repository": {\n    "type": "",\n    "url": ""\n  },\n  "keywords": {\n  },\n  "author": "' + answers.author + '",\n  "license": "' + answers.license + '",\n  "bugs": {\n    "url": ""\n  },\n  "homepage": "",\n  "dependencies": {\n  }\n}', function (err) {
       if (err) throw err;
-      console.log('done!');
     })
 
-
+    // Adding dependencies
+    console.log('\n---------------{ nem }---------------\n')
     for (var i = 0; answers.dependencies[i] + '' != 'undefined'; i++) {
-      console.log('yep')
 
-      const cmd = 'npm install --save ' + answers.dependencies[i]
+      const cmd = 'sudo npm install --save ' + answers.dependencies[i]
       let errfun = (error, stdout, stderr) => {
         if (error) console.log('exec error: ' + error)
         if (stdout) console.log(stdout)
-        if (stderr) console.log('shell error: ' + stderr)
+        //if (stderr) console.log('shell error: ' + stderr)
       }
       exec(cmd, errfun)
     }
+    const cmd = 'mkdir routes models controller config utils services'
+    let errfun = (error, stdout, stderr) => {
+      if (error) console.log('exec error: ' + error)
+      if (stdout) console.log(stdout)
+      //if (stderr) console.log('shell error: ' + stderr)
+    }
+    exec(cmd, errfun)
 
+    // creating server.js
+    fs.writeFile('server.js', 'const express = require(\'express\');\nconst bodyParser = require(\'body-parser\');\nconst cors = require(\'cors\');\nconst morgan = require(\'morgan\');\nconst mongoose = require(\'mongoose\');\nconst db = require(\'./config/db.js\');\n\nconst port = process.env.PORT || 8083;\n\nconst app = express();\n\napp.use(bodyParser.json());\napp.use(morgan(\'dev\'));\napp.use(cors());\n\nmongoose.connect(db.url);\n\nrequire(\'./routes/index.js\')(app);\n\napp.listen(port);\nconsole.log(`Server Running on Port: ${port}`);', function (err) {
+      if (err) throw err;
+    })
+
+    /*
+    // creating api.js in routes directory
+    const cmd = 'cd routes'
+    let errfun = (error, stdout, stderr) => {
+      if (error) console.log('exec error: ' + error)
+      if (stdout) console.log(stdout)
+    }
+    exec(cmd, errfun)
+
+    // creating schema in models directory
+    const cmd = 'cd ..'
+    let errfun = (error, stdout, stderr) => {
+      if (error) console.log('exec error: ' + error)
+      if (stdout) console.log(stdout)
+    }
+    exec(cmd, errfun)
+    */
 
   })
-
-
 
 
 }
@@ -101,6 +127,7 @@ program
   .description('Tool to automate structuring node, express and mongodb to create a crud app')
   .alias('v')
 
+// nem start  
 program
   .command('start')
   .description('To initialize..')
