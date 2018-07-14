@@ -43,10 +43,10 @@ let listfunction = () => {
       name: 'express',
       checked: true
     }, {
-     name: 'body-parser'
-    }, { 
+      name: 'body-parser'
+    }, {
       name: 'cors'
-    }, { 
+    }, {
       name: 'mongoose'
     }, {
       name: 'ejs'
@@ -55,33 +55,40 @@ let listfunction = () => {
     }, {
       name: 'cokkies'
     }]
-  }, {    
+  }, {
     name: 'devdependencies',
     type: 'checkbox',
     message: 'Specify the dev dependencies',
     choices: [{
       name: 'nodemon'
-    }] 
+    }]
   }, {
     name: 'confirmation',
     type: 'confirm',
     message: 'Do you wish to continue'
   }]).then((answers) => {
-    
 
 
-    fs.writeFile('package.json', '{\n  "name": "' + answers.name + '",\n  "version": "' + answers.version + '",\n  "description": "' + answers.description + '",\n  "main":"index.js",\n  "scripts": {\n    "test":""\n  },\n  "repository": {\n    "type": "",\n    "url": ""\n  },\n  "keywords": {\n  },\n  "author": "' + answers.author + '",\n  "license": "' + answers.license + '",\n  "bugs": {\n    "url": ""\n  },\n  "homepage": "",\n  "dependencies": {\n    "' + answers.dependencies[0] + '": "",\n    "' + answers.dependencies[1] + '": ""\n  }\n}', function (err) {
+
+    fs.writeFile('package.json', '{\n  "name": "' + answers.name + '",\n  "version": "' + answers.version + '",\n  "description": "' + answers.description + '",\n  "main":"index.js",\n  "scripts": {\n    "test":""\n  },\n  "repository": {\n    "type": "",\n    "url": ""\n  },\n  "keywords": {\n  },\n  "author": "' + answers.author + '",\n  "license": "' + answers.license + '",\n  "bugs": {\n    "url": ""\n  },\n  "homepage": "",\n  "dependencies": {\n  }\n}', function (err) {
       if (err) throw err;
-        console.log('Done!');
-      }) 
-  
-    /*const cmd = ''
-    let errfun = (error, stdout, stderr) => {
-      if (error) console.log('exec error: ' + error)
-      if (stdout) console.log(stdout)
-      if (stderr) console.log('shell error: ' + stderr)
+      console.log('done!');
+    })
+
+
+    for (var i = 0; answers.dependencies[i] + '' != 'undefined'; i++) {
+      console.log('yep')
+
+      const cmd = 'npm install --save ' + answers.dependencies[i]
+      let errfun = (error, stdout, stderr) => {
+        if (error) console.log('exec error: ' + error)
+        if (stdout) console.log(stdout)
+        if (stderr) console.log('shell error: ' + stderr)
+      }
+      exec(cmd, errfun)
     }
-    exec(cmd, errfun)*/
+
+
   })
 
 
