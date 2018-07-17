@@ -61,7 +61,8 @@ let listfunction = () => {
     type: 'checkbox',
     message: 'Specify the dev dependencies :-',
     choices: [{
-      name: 'nodemon'
+      name: 'nodemon',
+      checked: true
     }]
   }, {
     name: 'confirmation',
@@ -71,23 +72,36 @@ let listfunction = () => {
 
 
     // package.json creation
-    fs.writeFile('package.json', '{\n  "name": "' + answers.name + '",\n  "version": "' + answers.version + '",\n  "description": "' + answers.description + '",\n  "main":"index.js",\n  "scripts": {\n    "test":""\n  },\n  "repository": {\n    "type": "",\n    "url": ""\n  },\n  "keywords": {\n  },\n  "author": "' + answers.author + '",\n  "license": "' + answers.license + '",\n  "bugs": {\n    "url": ""\n  },\n  "homepage": "",\n  "dependencies": {\n  }\n}', function (err) {
+    fs.writeFile('package.json', '{\n  "name": "' + answers.name + '",\n  "version": "' + answers.version + '",\n  "description": "' + answers.description + '",\n  "main":"index.js",\n  "scripts": {\n    "test":""\n  },\n  "repository": {\n    "type": "",\n    "url": ""\n  },\n  "keywords": {\n  },\n  "author": "' + answers.author + '",\n  "license": "' + answers.license + '",\n  "bugs": {\n    "url": ""\n  },\n  "homepage": "",\n"devDependencies": {\n  },\n  "dependencies": {\n  }\n}', function (err) {
       if (err) throw err;
     })
 
+
     // Adding dependencies
-    console.log('\nEnter your password to install dependencies :-\n')
+    setTimeout(() => {
 
-    for (var i = 0; answers.dependencies[i] + '' != 'undefined'; i++) {
-
-      const cmd = 'sudo npm install --save ' + answers.dependencies[i]
-      let errfun = (error, stdout, stderr) => {
-        if (error) console.log('exec error: ' + error)
-        if (stdout) console.log(stdout)
-        //if (stderr) console.log('shell error: ' + stderr)
+      for (var i = 0; answers.dependencies[i] + '' != 'undefined'; i++) {
+        const cmd = 'sudo npm install --save ' + answers.dependencies[i]
+        let errfun = (error, stdout, stderr) => {
+          if (error) console.log('exec error: ' + error)
+          if (stdout) console.log(stdout)
+          //if (stderr) console.log('shell error: ' + stderr)
+        }
+        exec(cmd, errfun)
       }
-      exec(cmd, errfun)
+    }, 5000)
+
+    console.log('\nEnter your password :-\n')
+    // Adding dev dependencies
+    const command = 'sudo npm install -g nodemon'
+    let errf = (error, stdout, stderr) => {
+      if (error) console.log('exec error: ' + error)
+      if (stdout) console.log(stdout)
+      //if (stderr) console.log('shell error: ' + stderr)
     }
+    exec(command, errf)
+
+
 
 
     // creating all directories
@@ -167,6 +181,8 @@ let listfunction = () => {
         throw err
       }
     })
+
+
 
 
   })
