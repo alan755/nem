@@ -70,9 +70,25 @@ let listfunction = () => {
     message: 'Do you wish to continue :'
   }]).then((answers) => {
 
+    const command = 'mkdir ' + answers.name
+    let erfun = (error, stdout, stderr) => {
+      if (error) console.log('exec error: ' + error)
+      if (stdout) console.log(stdout)
+      //if (stderr) console.log('shell error: ' + stderr)
+    }
+    exec(command, erfun)
+
+    const cdd = 'cd ' + answers.name
+    let errfun = (error, stdout, stderr) => {
+      if (error) console.log('exec error: ' + error)
+      if (stdout) console.log(stdout)
+      //if (stderr) console.log('shell error: ' + stderr)
+    }
+    exec(cdd, errfun)
+
 
     // package.json creation
-    fs.writeFile('package.json', '{\n  "name": "' + answers.name + '",\n  "version": "' + answers.version + '",\n  "description": "' + answers.description + '",\n  "main":"index.js",\n  "scripts": {\n    "test":""\n  },\n  "repository": {\n    "type": "",\n    "url": ""\n  },\n  "keywords": {\n  },\n  "author": "' + answers.author + '",\n  "license": "' + answers.license + '",\n  "bugs": {\n    "url": ""\n  },\n  "homepage": "",\n"devDependencies": {\n  },\n  "dependencies": {\n  }\n}', function (err) {
+    fs.writeFile('./' + answers.name + '/package.json', '{\n  "name": "' + answers.name + '",\n  "version": "' + answers.version + '",\n  "description": "' + answers.description + '",\n  "main":"index.js",\n  "scripts": {\n    "test":""\n  },\n  "repository": {\n    "type": "",\n    "url": ""\n  },\n  "keywords": {\n  },\n  "author": "' + answers.author + '",\n  "license": "' + answers.license + '",\n  "bugs": {\n    "url": ""\n  },\n  "homepage": "",\n"devDependencies": {\n  },\n  "dependencies": {\n  }\n}', function (err) {
       if (err) throw err;
     })
 
@@ -81,106 +97,54 @@ let listfunction = () => {
     setTimeout(() => {
 
       for (var i = 0; answers.dependencies[i] + '' != 'undefined'; i++) {
-        const cmd = 'sudo npm install --save ' + answers.dependencies[i]
-        let errfun = (error, stdout, stderr) => {
+
+        const cmd = 'cd ' + answers.name + ' ; npm install --save ' + answers.dependencies[i]
+        let errrfun = (error, stdout, stderr) => {
           if (error) console.log('exec error: ' + error)
           if (stdout) console.log(stdout)
           //if (stderr) console.log('shell error: ' + stderr)
         }
-        exec(cmd, errfun)
+        exec(cmd, errrfun)
       }
-    }, 5000)
+    }, 1000)
 
-    console.log('\nEnter your password :-\n')
+    //console.log('\nEnter your password :-\n')
     // Adding dev dependencies
-    const command = 'sudo npm install -g nodemon'
+
+    const cmdd = 'cd ' + answers.name + ' ; sudo npm install -g nodemon'
     let errf = (error, stdout, stderr) => {
       if (error) console.log('exec error: ' + error)
       if (stdout) console.log(stdout)
       //if (stderr) console.log('shell error: ' + stderr)
     }
-    exec(command, errf)
+    exec(cmdd, errf)
 
 
 
 
     // creating all directories
-    const cmd = 'mkdir routes models controller config utils services'
-    let errfun = (error, stdout, stderr) => {
+    const cdm = 'mkdir ./' + answers.name + '/routes ./' + answers.name + '/models ./' + answers.name + '/controller ./' + answers.name + '/config  ./' + answers.name + '/utils ./' + answers.name + '/services'
+    let errfunction = (error, stdout, stderr) => {
       if (error) console.log('exec error: ' + error)
       if (stdout) console.log(stdout)
       //if (stderr) console.log('shell error: ' + stderr)
     }
-    exec(cmd, errfun)
+    exec(cdm, errfunction)
 
     // creating server.js
-    fs.writeFile('server.js', 'const express = require(\'express\');\nconst bodyParser = require(\'body-parser\');\nconst cors = require(\'cors\');\nconst morgan = require(\'morgan\');\nconst mongoose = require(\'mongoose\');\nconst db = require(\'./config/db.js\');\n\nconst port = process.env.PORT || 8083;\n\nconst app = express();\n\napp.use(bodyParser.json());\napp.use(morgan(\'dev\'));\napp.use(cors());\n\nmongoose.connect(db.url);\n\n\napp.listen(port, () => {\n  console.log(`Server is up in port : ` + port);\n})', function (err) {
+
+    const com = 'cd ' + answers.name
+    let errrfun = (error, stdout, stderr) => {
+      if (error) console.log('exec error: ' + error)
+      if (stdout) console.log(stdout)
+      //if (stderr) console.log('shell error: ' + stderr)
+    }
+    exec(com, errrfun)
+
+    fs.writeFile('./' + answers.name + '/server.js', 'const express = require(\'express\');\nconst bodyParser = require(\'body-parser\');\nconst cors = require(\'cors\');\nconst morgan = require(\'morgan\');\nconst mongoose = require(\'mongoose\');\nconst db = require(\'./config/db.js\');\n\nconst port = process.env.PORT || 8083;\n\nconst app = express();\n\napp.use(bodyParser.json());\napp.use(morgan(\'dev\'));\napp.use(cors());\n\nmongoose.connect(db.url);\n\n\napp.listen(port, () => {\n  console.log(`Server is up in port : ` + port);\n})', function (err) {
       if (err) throw err;
     })
 
-
-    // creating api.js in routes directory
-
-    const cm = 'cd routes'
-    let errorfun = (error, stdout, stderr) => {
-      if (error) console.log('exec error: ' + error)
-      if (stdout) console.log(stdout)
-      //if (stderr) console.log('shell error: ' + stderr)
-    }
-    exec(cm, errorfun)
-
-    fs.writeFile('./routes/api.js', 'const express = require(\'express\')\nconst Person = require(\'../models/person\')\n\nvar app = express()\n\napp.get(\'/person\', (req, res, next) => {\n  res.send({name: \'GET\'})\n})\n\napp.post(\'/person\', (req, res,next) => {\n  res.send({name: \'POST\'})\n})\n\napp.put(\'/person/:id\', (req, res, next) => {\n  res.send({name: \'PUT\'})\n})\n\napp.delete(\'/person/:id\', (req, res, next) => {\n  res.send({name: \'DELETE\'})\n})\n\nmodule.exports = router', (err) => {
-      if (err) {
-        throw err
-      }
-    })
-
-    // creating schema in models directory
-    const cmm = 'cd ..'
-    let errrfunction = (error, stdout, stderr) => {
-      if (error) console.log('exec error: ' + error)
-      if (stdout) console.log(stdout)
-      //if (stderr) console.log('shell error: ' + stderr)
-    }
-    exec(cmm, errrfunction)
-
-    const cmdd = 'cd models'
-    let errorfunction = (error, stdout, stderr) => {
-      if (error) console.log('exec error: ' + error)
-      if (stdout) console.log(stdout)
-      //if (stderr) console.log('shell error: ' + stderr)
-    }
-    exec(cmdd, errorfunction)
-
-    fs.writeFile('./models/user.js', 'const mongoose = require(\'mongoose\')\nconst Schema = mongoose.Schema\nconst userschema = new Schema({\n  name: {\n    type: String,\nrequired: [true, \'Name is reequiered\']\n  }\n})\n\nconst user = mongoose.model(\'usermodel\', userschema)\nmodule.exports = user', (err) => {
-      if (err) {
-        throw err
-      }
-    })
-
-    // creating db.js in config
-    const cdm = 'cd ..'
-    let errorfn = (error, stdout, stderr) => {
-      if (error) console.log('exec error: ' + error)
-      if (stdout) console.log(stdout)
-      //if (stderr) console.log('shell error: ' + stderr)
-    }
-    exec(cdm, errorfn)
-
-
-    const cdd = 'cd config'
-    let errorfunct = (error, stdout, stderr) => {
-      if (error) console.log('exec error: ' + error)
-      if (stdout) console.log(stdout)
-      //if (stderr) console.log('shell error: ' + stderr)
-    }
-    exec(cdd, errorfunct)
-
-    fs.writeFile('./config/db.js', 'module.exports = {\n  \'url\': "mongodb://ajojohn:ajojohn123@ds219641.mlab.com:19641/justblog"\n};', (err) => {
-      if (err) {
-        throw err
-      }
-    })
 
 
 
@@ -197,7 +161,7 @@ program
 
 // nem start  
 program
-  .command('start')
+  .command('init')
   .description('To initialize..')
   .action(listfunction)
 
