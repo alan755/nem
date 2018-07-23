@@ -8,10 +8,10 @@ const fs = require('fs')
 
 const exec = require('child_process').exec // to execute
 
-let listfunction = () => {
+let initfunction = () => {
 
 
-  console.log('\n-{ N E M }-')
+  console.log('\n${nem}  \\_(. .)_/')
   console.log('\nPlease answer the following :-\n')
   inquirer.prompt([{
     name: 'name',
@@ -28,7 +28,7 @@ let listfunction = () => {
   }, {
     name: 'version',
     type: 'input',
-    message: 'Which version? :'
+    message: 'Which version? (1.0.0) :'
   }, {
     name: 'license',
     type: 'input',
@@ -107,7 +107,7 @@ let listfunction = () => {
 
 
     // Adding dependencies 
-
+    console.log('\n${Loading} |_(..)_|')
     setTimeout(() => {
 
       for (var i = 0; answers.dependencies[i] + '' != 'undefined'; i++) {
@@ -162,7 +162,7 @@ let listfunction = () => {
 
       } else {
 
-        const cmd = 'cd ' + answers.name + ' ;sudo npm install --save sequelize mysql'
+        const cmd = 'cd ' + answers.name + ' ; npm install --save sequelize mysql'
         let errrfun = (error, stdout, stderr) => {
           if (error) {
             console.log('exec error: ' + error)
@@ -222,15 +222,160 @@ let listfunction = () => {
 
 }
 
+let apifunction = (args) => {
+
+  if (args.file + '' != 'undefined') {
+    const cdd = 'echo ' + args.file
+    let errorfun = (error, stdout, stderr) => {
+      if (error) {
+        console.log('exec error: ' + error)
+      }
+      if (stdout) {
+        //console.log(stdout)
+      }
+      if (stderr) {
+        console.log('shell error: ' + stderr)
+      }
+    }
+    exec(cdd, errorfun)
+
+    fs.writeFile('./' + args.file, 'const express = require(\'haiexpress\')\nconst Person = require(\'../models/person\')\n\nvar app = express()\n\napp.get(\'/person\', (req, res, next) => {\n  res.send({name: \'GET\'})\n})\n\napp.post(\'/person\', (req, res,next) => {\n  res.send({name: \'POST\'})\n})\n\napp.put(\'/person/:id\', (req, res, next) => {\n  res.send({name: \'PUT\'})\n})\n\napp.delete(\'/person/:id\', (req, res, next) => {\n  res.send({name: \'DELETE\'})\n})\n\nmodule.exports = router', function (err) {
+      if (err) {
+        throw err;
+      } else {
+        console.log('File created...!')
+      }
+
+    })
+  } else {
+    console.log('Error: File destination not found!\nTry: nem restapi --create app_name/routes/api.js')
+  }
+
+}
+
+let mongodbfunction = (args) => {
+
+  if (args.file + '' != 'undefined') {
+
+    const cdd = 'echo ' + args.file
+    let errorfun = (error, stdout, stderr) => {
+      if (error) {
+        console.log('exec error: ' + error)
+      }
+      if (stdout) {
+        //console.log(stdout)
+      }
+      if (stderr) {
+        console.log('shell error: ' + stderr)
+      }
+    }
+    exec(cdd, errorfun)
+
+    fs.writeFile('./' + args.file, 'const mongoose = require(\'mongoose\')\nconst Schema = mongoose.Schema\nconst userschema = new Schema({\n  name: {\n    type: String,\nrequired: [true, \'Name is reequiered\']\n  }\n})\n\nconst user = mongoose.model(\'usermodel\', userschema)\nmodule.exports = user', function (err) {
+      if (err) {
+        throw err;
+      } else {
+        console.log('File created...!')
+      }
+
+    })
+  } else {
+    console.log('Error: File destination not found\nTry: nem mongodb --create app_name/models/user.js')
+  }
+
+}
+
+let graphqlfunction = (args) => {
+
+  if (args.file + '' != 'undefined') {
+
+    const cdd = 'echo ' + args.file
+    let errorfun = (error, stdout, stderr) => {
+      if (error) {
+        console.log('exec error: ' + error)
+      }
+      if (stdout) {
+        //console.log(stdout)
+      }
+      if (stderr) {
+        console.log('shell error: ' + stderr)
+      }
+    }
+    exec(cdd, errorfun)
+
+    fs.writeFile('./' + args.file, 'const {\n  GraphQLObjectType,\n  GraphQLString,\n  GraphQLInt,\n  GraphQLSchema,\n  GraphQLList,\n  GraphQLNonNull\n  GraphQLID\n} = require(\'graphql\')\n\nconst userType = new GraphQLObjectType({\n  name: \'user\',\n  fields: () => ({\n    id: {\n      type: GraphQLString\n    },\n    name: {\n      type: GraphQLString\n    },\n  })\n});\n\nconst RootQuery = new GraphQLObjectType({\n  name: \'RootQueryType\',\n  fields: {\n    user: {\n      type: userType,\n      args: {\n        id: {\n          type: GraphQLString\n        }\n      },\n      resolve(parentValue, args) {\n\n      }\n    }\n});\n\nconst mutation = new GraphQLObjectType({\n  name: \'mutation\',\n  fields: {\n    adduser: {\n      type: userType,\n      args: {\n        id: {\n          type: new GraphQLNonNull(GraphQLID)\n        }\n        name: {\n          type: new GraphQLNonNull(GraphQLString)\n        }\n        },\n      resolve(parentValue, args) {\n\n      }\n    },\n    deleteuser: {\n      type: userType,\n      args: {\n        id: {\n          type: new GraphQLNonNull(GraphQLID)\n        }\n      },\n      resolve(parentValue, args) {\n      }\n    },\n    updateuser: {\n      type: userType,\n    args: {\n        id: {\n          type: GraphQLString\n        },\n        name: {\n          type: GraphQLString\n        }\n      },\n      resolve(parentValue, args) {\n\n      }\n    }\n  }\n});\n\nmodule.exports = new GraphQLSchema({\n  query: RootQuery,\n  mutation\n})', function (err) {
+      if (err) {
+        throw err;
+      } else {
+        console.log('File created...!')
+      }
+
+    })
+  } else {
+    console.log('Error: File destination not found\nTry: nem graphql --create app_name/routes/graphapi.js')
+  }
+
+}
+
+let sqlfunction = () => {
+  console.log('creating sql.js')
+
+  /*const cdd = 'echo ' + args.file
+  let errorfun = (error, stdout, stderr) => {
+    if (error) {
+      console.log('exec error: ' + error)
+    }
+    if (stdout) {
+      //console.log(stdout)
+    }
+    if (stderr) {
+      console.log('shell error: ' + stderr)
+    }
+  }
+  exec(cdd, errorfun)
+
+  fs.writeFile('./' + args.file, 'const express = require(\'haiexpress\')\nconst Person = require(\'../models/person\')\n\nvar app = express()\n\napp.get(\'/person\', (req, res, next) => {\n  res.send({name: \'GET\'})\n})\n\napp.post(\'/person\', (req, res,next) => {\n  res.send({name: \'POST\'})\n})\n\napp.put(\'/person/:id\', (req, res, next) => {\n  res.send({name: \'PUT\'})\n})\n\napp.delete(\'/person/:id\', (req, res, next) => {\n  res.send({name: \'DELETE\'})\n})\n\nmodule.exports = router', function (err) {
+    if (err) {
+      throw err;
+    } else {
+      console.log('File created...!')
+    }
+
+  })*/
+}
+
 program
-  .version('1.0.0')
+  .version('1.0.0', '-v, --version')
   .description('Tool to automate structuring node, express and mongodb to create a crud app')
   .alias('v')
 
-// nem start  
 program
   .command('init')
-  .description('To initialize..')
-  .action(listfunction)
+  .description('To initialize the app.')
+  .action(initfunction)
+
+program
+  .command('restapi ')
+  .option('-f, --file <file>', 'file name')
+  .description('To add RESTful API functionlity.')
+  .action(apifunction)
+
+program
+  .command('mongodb')
+  .option('-f, --file <file>', 'file name')
+  .description('To add MogoDB,database functionality.')
+  .action(mongodbfunction)
+
+program
+  .command('graphql')
+  .option('-f, --file <file>', 'file name')
+  .description('To add GraphQL functionality.')
+  .action(graphqlfunction)
+
+program
+  .command('sql')
+  .option('-f, --file <file>', 'file name')
+  .description('To add mySQL, database functionality.')
+  .action(sqlfunction)
 
 program.parse(process.argv)
